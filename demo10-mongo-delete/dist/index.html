@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Hello Campers</h1>
+    <span>Name: </span>
+    <input id="name" type="textbox" />
+    <button id="submit">Submit</button>
+    <h2>Adventurers:</h2>
+    <div class="adventurers">
+    </div>
+    <button id="getAdventurers">Get Adventurers</button>
+    <script>
+        $('#submit').click(function() {
+            var name = $('#name').val()
+
+            $.ajax('/api/users/create?name=' + name).then(function (res) {
+                if (res && res.status === 'success') {
+                    console.log('user created')
+                }
+            }, function (error) {
+                console.log('api error', error)
+            })
+        })
+
+        $('#getAdventurers').click(function () {
+            $.ajax('/api/users/read').then(function (users) {
+                console.log('uers', users)
+
+                renderUsers(users)
+
+            }, function (error) {
+                console.log('error', error)
+            })
+        })
+
+        function renderUsers(users) {
+            $('.adventurers').empty()
+            
+            users.forEach(function (u) {
+                var $user = $('<div><span contenteditable="true">' + u.name + '</span><button class="update">Update</button><button class="delete">Delete</button><div>')
+                $user.data('id', u._id)
+                $('.adventurers').append($user)
+            })
+
+            $('.adventurers').on('click', '.update', function (e) {
+                var $user = $(e.target).parent()
+                var id = $user.data('id')
+                var name = $user.find('span').html()
+
+                $.ajax({
+                    method: 'POST',
+                    url: '/api/users/update',
+                    data: {
+                        id: id,
+                        name: name
+                    }
+                }).then(function (resp) {
+                    debugger;
+                }, function (err) {
+                    debugger;
+                    console.error('update failed, take care of this Hai')
+                })
+
+            })
+
+            $('.adventurers').on('click', '.delete', function (e) {
+                var $user = $(e.target).parent()
+                var id = $user.data('id')
+
+                $.ajax({
+                    method: 'POST',
+                    url: '/api/users/delete',
+                    data: {
+                        id: id
+                    }
+                }).then(function (resp) {
+                    debugger;
+                }, function (err) {
+                    debugger;
+                    console.error('update failed, take care of this Hai')
+                })
+
+
+            })
+
+        }
+
+    </script>
+    
+</body>
+</html>
