@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Hello Campers</h1>
+    <span>Name: </span>
+    <input id="name" type="textbox" />
+    <button id="submit">Submit</button>
+    <h2>Adventurers:</h2>
+    <div class="adventurers">
+    </div>
+
+    <script>
+        $('#submit').click(function() {
+            var name = $('#name').val()
+
+            $.ajax('/api/users/create?name=' + name).then(function (users) {
+                console.log('success', users)
+                $('.adventurers').empty();
+                users.forEach(function (u) {
+                    $('.adventurers').append('<p>' + u + '</p>')
+                })
+            }, function (error) {
+                console.log('api error', error)
+            })
+        })
+    </script>
+    
+</body>
+</html>

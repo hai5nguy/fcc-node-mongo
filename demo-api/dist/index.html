@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Hello Campers</h1>
+    <span>Name: </span>
+    <input id="name" type="textbox" />
+    <button id="submit">Submit</button>
+    <div>
+        Your named reversed: <span class="nameReversed"></span>
+    </div>
+
+    <script>
+        $('#submit').click(function() {
+            var name = $('#name').val()
+
+            $.ajax('/api/reverse/' + name).then(function (res) {
+                console.log('success', res)
+                $('.nameReversed').html(res.nameReversed)
+            }, function (error) {
+                console.log('api error', error)
+            })
+        })
+    </script>
+    
+</body>
+</html>
